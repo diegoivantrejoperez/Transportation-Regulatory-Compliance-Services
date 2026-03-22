@@ -129,6 +129,7 @@ export default function StatusPage() {
   const [loadingData, setLoadingData] = useState(!data);
   const [error, setError] = useState('');
   const [overlayDismissed, setOverlayDismissed] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -241,7 +242,7 @@ export default function StatusPage() {
                   Your MCS-150 is due in <strong style={{ color: '#FCD34D' }}>{data?.days_until_due} days</strong>. Renew early to avoid last-minute stress and potential issues.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '0 16px' }}>
-                  <button className="gold-btn" onClick={() => setOverlayDismissed(false)} style={{ width: '100%', padding: '16px', justifyContent: 'center' }}
+                  <button className="gold-btn" onClick={() => setShowPricing(true)} style={{ width: '100%', padding: '16px', justifyContent: 'center' }}
                     data-testid="renew-now-btn">
                     <i className="fas fa-file-alt" style={{ marginRight: '8px' }} />RENEW NOW - FROM $299
                   </button>
@@ -250,7 +251,7 @@ export default function StatusPage() {
                     <i className="fas fa-bell" style={{ marginRight: '8px' }} />Activate FREE 30-Day Monitoring
                   </button>
                 </div>
-                {overlayDismissed === false && <PricingSection usdot={usdot} />}
+                {showPricing && <PricingSection usdot={usdot} />}
               </>
             )}
 

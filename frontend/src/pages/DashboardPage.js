@@ -8,12 +8,13 @@ const LOGO_SQUARE = 'https://customer-assets.emergentagent.com/job_44f8ad78-8ec0
 
 function ComplianceGauge({ daysUntilDue }) {
   const maxDays = 730;
-  const pct = daysUntilDue === null ? 0 : Math.min(Math.max(daysUntilDue / maxDays, 0), 1);
+  const hasData = daysUntilDue !== null && daysUntilDue !== undefined;
+  const pct = !hasData ? 0 : Math.min(Math.max(daysUntilDue / maxDays, 0), 1);
   const r = 72;
   const circ = 2 * Math.PI * r;
-  const offset = circ - pct * circ;
-  const color = !daysUntilDue || daysUntilDue < 0 ? '#DC2626' : daysUntilDue <= 30 ? '#FBBF24' : '#10B981';
-  const label = !daysUntilDue || daysUntilDue < 0 ? 'OVERDUE' : daysUntilDue <= 30 ? 'DUE SOON' : 'COMPLIANT';
+  const offset = hasData ? circ - pct * circ : circ;
+  const color = !hasData ? '#6B7280' : daysUntilDue < 0 ? '#DC2626' : daysUntilDue <= 30 ? '#FBBF24' : '#10B981';
+  const label = !hasData ? 'NO DATA' : daysUntilDue < 0 ? 'OVERDUE' : daysUntilDue <= 30 ? 'DUE SOON' : 'COMPLIANT';
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', marginBottom: '8px' }}>
@@ -21,10 +22,10 @@ function ComplianceGauge({ daysUntilDue }) {
         <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="14" />
         <circle cx="90" cy="90" r={r} fill="none" stroke={color} strokeWidth="14" strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 90 90)" style={{ transition: 'stroke-dashoffset 1.5s ease, stroke 0.5s' }} />
         {/* Center */}
-        <text x="90" y="82" textAnchor="middle" fill="white" fontSize={daysUntilDue !== null && daysUntilDue > 99 ? '28' : '34'} fontWeight="800" fontFamily="Montserrat, sans-serif">
-          {daysUntilDue !== null ? (daysUntilDue < 0 ? '!' : daysUntilDue) : '--'}
+        <text x="90" y="82" textAnchor="middle" fill="white" fontSize={hasData && daysUntilDue > 99 ? '28' : '34'} fontWeight="800" fontFamily="Montserrat, sans-serif">
+          {!hasData ? '--' : (daysUntilDue < 0 ? '!' : daysUntilDue)}
         </text>
-        {daysUntilDue !== null && daysUntilDue >= 0 && (
+        {hasData && daysUntilDue >= 0 && (
           <text x="90" y="100" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="Roboto, sans-serif">days left</text>
         )}
         <text x="90" y="118" textAnchor="middle" fill={color} fontSize="10" fontWeight="700" fontFamily="Montserrat, sans-serif" letterSpacing="1">{label}</text>
